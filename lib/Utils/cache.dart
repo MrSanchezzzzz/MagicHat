@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:magic_hat/Utils/provider.dart';
 
-import '../Entities/personage.dart';
+import '../models/personage.dart';
 import 'package:path_provider/path_provider.dart';
 
 class FileManager {
@@ -67,10 +67,9 @@ class FileManager {
         jsonList = jsonDecode(existingContent);
 
         for (var item in jsonList) {
-          print(item['id']);
-          print(personage.id);
           if (item['id']==personage.id) {
-            item['attempts'] = (item['attempts'] ?? 0) + 1;
+            item['attempts'] = (item['attempts'] ?? 1) + 1;
+            item['isGuessedCorrect']=personage.isGuessedCorrect;
             shouldAdd = false;
             break;
           }

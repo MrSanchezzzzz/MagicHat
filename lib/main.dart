@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:magic_hat/Utils/cache.dart';
+import 'package:magic_hat/Wigets/alert_dialog.dart';
 
 import 'Screens/home_screen.dart';
 import 'Screens/list_screen.dart';
 import 'Utils/provider.dart';
+import 'constants/theme.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,12 +17,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ProviderScope(child: MaterialApp(
+    return ProviderScope(
+        child: MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
+      theme: Themes.defaultTheme,
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     ));
   }
@@ -28,13 +28,14 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends ConsumerStatefulWidget {
   const MyHomePage({super.key, required this.title});
+
   final String title;
+
   @override
   ConsumerState<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends ConsumerState<MyHomePage> {
-
   int _selectedIndex = 0;
 
   static List<Widget> _widgetOptions = <Widget>[
@@ -47,60 +48,112 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
       _selectedIndex = index;
     });
   }
-  void setCountersFromFile() async{
+
+  void setCountersFromFile() async {
     await FileManager.loadCountersIntoProviders(ref);
   }
+
   @override
   void initState() {
     super.initState();
     setCountersFromFile();
   }
 
+  void clearPersonages() async {
+    String title = 'Obliviate';
+    String text = 'Do you really want to clear all guessed characters and forget them..?';
+    String? response = await showAdaptiveDialog<String>(
+        builder: (BuildContext context) => MagicAlertDialog(
+              title: title,
+              text: text,
+            ),
+        context: context);
+    if (response != null) {
+      if (response == 'OK') {
+        ref.read(totalCounterProvider.notifier).reset();
+        ref.read(successCounterProvider.notifier).reset();
+        ref.read(failedCounterProvider.notifier).reset();
+        FileManager.clear();
+        ref.refresh(guessedPersonagesProvider);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    const iconSize = 24.0;
     return GestureDetector(
-
-      onTap: (){
+      onTap: () {
         FocusManager.instance.primaryFocus?.unfocus();
       },
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
-          title: Text("Magic hat"),
+          title: Row(
+            children: [
+              Image.asset(
+                'Images/logo.png',
+                width: 36,
+                height: 36,
+              ),
+              SizedBox(width: 8),
+              const Text("Magic hat"),
+            ],
+          ),
           actions: [
-            Consumer(
-              builder: (context,ref,child){
-                return IconButton(
-                    onPressed: (){
-                      ref.read(totalCounterProvider.notifier).reset();
-                      ref.read(successCounterProvider.notifier).reset();
-                      ref.read(failedCounterProvider.notifier).reset();
-                      FileManager.clear();
-                      //ref.read(guessedPersonagesProvider.notifier);
-                    },
-                    icon: Icon(Icons.refresh));
-              },
+            Row(
+              children: [
+                Consumer(
+                  builder: (context, ref, child) {
+                    return IconButton(
+                        onPressed: clearPersonages,
+                        icon: Image.asset(
+                          'Images/forget.png',
+                          width: 36,
+                          height: 36,
+                        ));
+                  },
+                ),
+                SizedBox(
+                  width: 8,
+                )
+              ],
             )
-
           ],
-          backgroundColor: Colors.amber[800],
         ),
         body: Center(
           child: _widgetOptions.elementAt(_selectedIndex),
         ),
         bottomNavigationBar: BottomNavigationBar(
-          items: const <BottomNavigationBarItem>[
+          showSelectedLabels: false,
+          showUnselectedLabels: false,
+          items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Home',
+              icon: Container(
+                padding: EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                    color: _selectedIndex == 0 ? Colors.amber.withOpacity(0.5) : Colors.transparent,
+                    borderRadius: BorderRadius.all(Radius.circular(48))),
+                child: Image.asset(
+                  'Images/houses_logo.png',
+                  width: iconSize,
+                  height: iconSize,
+                  fit: BoxFit.scaleDown,
+                ),
+              ),
+              label: '',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.list),
-              label: 'List',
-            ),
+                icon: Container(
+                  padding: EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                      color: _selectedIndex == 1 ? Colors.amber.withOpacity(0.5) : Colors.transparent,
+                      borderRadius: BorderRadius.all(Radius.circular(48))),
+                  child: Image.asset('Images/book.png', width: iconSize, height: iconSize, fit: BoxFit.scaleDown),
+                ),
+                label: ''),
           ],
           currentIndex: _selectedIndex,
-          selectedItemColor: Colors.amber[800],
           onTap: _onItemTapped,
         ),
       ),

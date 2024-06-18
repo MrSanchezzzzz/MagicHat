@@ -17,7 +17,7 @@ class _ListScreenState extends ConsumerState<ListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final personages=ref.watch(guessedPersonagesProvider);
+    final personages=ref.watch(guessedPersonagesProvider).value??[];
     return Padding(
       padding: EdgeInsets.all(16),
       child:Column(

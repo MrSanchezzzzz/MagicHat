@@ -96,7 +96,7 @@ Personage.empty()
       alive: json['alive']??false,
       image: json['image']??"",
       isGuessedCorrect:json['isGuessedCorrect']??false,
-      attempts: json['attempts']??0
+      attempts: json['attempts']??1
     );
   }
 

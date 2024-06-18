@@ -3,7 +3,6 @@ description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
-
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
 # followed by an optional build number separated by a +.
@@ -79,7 +78,15 @@ flutter:
     - Images/slytherin.png
     - Images/hufflepuff.png
     - Images/ravenclaw.png
+    - Images/forget.png
+    - Images/logo.png
+    - Images/houses_logo.png
+    - Images/book.png
 
+  fonts:
+    - family: MyFont
+      fonts:
+        - asset: Fonts/harry.ttf
   # For details regarding adding assets from package dependencies, see
   # https://flutter.dev/assets-and-images/#from-packages
 

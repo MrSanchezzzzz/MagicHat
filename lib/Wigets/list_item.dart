@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:magic_hat/Entities/personage.dart';
+import 'package:magic_hat/models/personage.dart';
 
 class ListItem extends StatelessWidget {
   const ListItem({super.key, required this.personage});

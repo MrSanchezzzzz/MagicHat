@@ -2,11 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:http/http.dart' as http;
-import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-import '../Entities/personage.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
+import '../models/personage.dart';
 
 
 

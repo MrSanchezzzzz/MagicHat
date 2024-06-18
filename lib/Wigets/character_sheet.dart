@@ -1,12 +1,29 @@
 import 'package:flutter/material.dart';
 
-class CharacterSheet extends StatelessWidget {
-  const CharacterSheet({super.key, required this.url, required this.name});
+class CharacterSheet extends StatefulWidget {
+  const CharacterSheet({
+    super.key,
+    required this.url,
+    required this.name,
+  });
+
   final String url;
   final String name;
+
+  @override
+  _CharacterSheetState createState() => _CharacterSheetState();
+}
+
+class _CharacterSheetState extends State<CharacterSheet>{
+  @override
+  void initState() {
+    super.initState();
+  }
+
+
   @override
   Widget build(BuildContext context) {
-    final double imageWidth=MediaQuery.of(context).size.width*0.5;
+    final double imageWidth = MediaQuery.of(context).size.width * 0.5;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -14,14 +31,17 @@ class CharacterSheet extends StatelessWidget {
           child: Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: NetworkImage(url),
-                fit: BoxFit.contain
-              )
+                image: NetworkImage(widget.url),
+                fit: BoxFit.contain,
+              ),
             ),
+            width: imageWidth,
           ),
         ),
-        SizedBox(height: 8,),
-        Text(name,style: TextStyle(fontSize: 24,fontWeight: FontWeight.bold),)
+        Text(
+          widget.name,
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+        ),
       ],
     );
   }
